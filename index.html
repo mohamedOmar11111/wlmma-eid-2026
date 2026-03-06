@@ -46,6 +46,19 @@
             opacity: 0.2;
         }
 
+        /* --- LANG SWITCHER --- */
+        .lang-switcher {
+            position: fixed; top: 30px; right: 30px; z-index: 2500;
+            display: flex; gap: 10px;
+        }
+        .lang-btn {
+            background: rgba(0,0,0,0.8); border: 1px solid var(--border);
+            color: #555; padding: 8px 15px; border-radius: 5px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+            cursor: pointer; transition: 0.3s;
+        }
+        .lang-btn.active { color: var(--accent); border-color: var(--accent); }
+
         /* --- AUTH OVERLAY --- */
         .auth-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -111,6 +124,8 @@
             padding: 30px; backdrop-filter: blur(10px);
             display: flex; flex-direction: column; transform: translateX(400px);
         }
+        body.lang-ar .sidebar { right: auto; left: 30px; transform: translateX(-400px); }
+        body.lang-ar .tactical-header { left: auto; right: 30px; }
 
         /* --- GLOWING DOT MARKERS --- */
         .pulsing-dot {
@@ -151,18 +166,18 @@
     <!-- AUTHENTICATION -->
     <div class="auth-overlay" id="auth">
         <div class="auth-card">
-            <div class="system-tag">Secure Access // WLMMA HQ</div>
-            <h1 style="margin-bottom: 30px;">IDENTITY</h1>
+            <div class="system-tag" id="auth-tag">Secure Access // WLMMA HQ</div>
+            <h1 style="margin-bottom: 30px;" id="auth-title">IDENTITY</h1>
             <input type="text" id="auth-name" placeholder="FULL NAME">
             <input type="text" id="auth-phone" placeholder="PHONE NUMBER (+966)">
-            <button class="btn-unlock" onclick="validateAuth()">Establish Link</button>
+            <button class="btn-unlock" id="btn-establish" onclick="validateAuth()">Establish Link</button>
         </div>
     </div>
 
     <!-- MAIN UI -->
     <div id="map-ui">
         <div class="tactical-header">
-            <div class="system-tag" style="color: var(--accent);">Target Sector: Riyadh</div>
+            <div class="system-tag" style="color: var(--accent);" id="sector-tag">Target Sector: Riyadh</div>
             <h2 style="margin:5px 0 0 0; font-weight:900;">
                 <span class="en-content">Mission Map</span>
                 <span class="ar-content">خريطة المهام</span>
@@ -172,17 +187,17 @@
         <div id="map"></div>
 
         <div class="sidebar" id="sidebar">
-            <div class="system-tag">Mission Decryption</div>
+            <div class="system-tag" id="sidebar-tag">Mission Decryption</div>
             <h3 id="mission-title" style="margin:10px 0; color: #fff;">AWAITING SELECTION</h3>
             <p id="mission-desc" style="font-size:0.85rem; color:#888;">Select a pulsing node to access secret mission parameters.</p>
             
             <div id="booking-form-container" style="display:none; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
-                <div class="system-tag" style="color:var(--primary); font-size: 0.5rem;">Transmission Channel</div>
+                <div class="system-tag" style="color:var(--primary); font-size: 0.5rem;" id="trans-tag">Transmission Channel</div>
                 <form id="mission-form" action="https://formspree.io/f/mvzwpjbz" method="POST">
                     <input type="hidden" name="Mission" id="hidden-mission-name">
                     <input type="hidden" name="User_Identity" id="hidden-user-name">
                     <input type="hidden" name="User_Contact" id="hidden-user-phone">
-                    <button type="submit" class="btn-booking">Secure Mission Spot</button>
+                    <button type="submit" class="btn-booking" id="btn-secure">Secure Mission Spot</button>
                 </form>
             </div>
 
@@ -195,7 +210,7 @@
         </div>
     </div>
 
-    <div class="footer-branding">
+    <div class="footer-branding" id="footer-tag">
         MOHAMED OMAR // THE GROWTH ARCHITECT
     </div>
 
@@ -203,6 +218,40 @@
     <script>
         let GLOBAL_USER = "";
         let GLOBAL_PHONE = "";
+        let CURRENT_LANG = "en";
+
+        const translations = {
+            en: {
+                authTag: "Secure Access // WLMMA HQ",
+                authTitle: "IDENTITY",
+                namePh: "FULL NAME",
+                phonePh: "PHONE NUMBER (+966)",
+                establish: "Establish Link",
+                sector: "Target Sector: Riyadh",
+                sidebarTag: "Mission Decryption",
+                awaiting: "AWAITING SELECTION",
+                selectNode: "Select a pulsing node to access secret mission parameters.",
+                transTag: "Transmission Channel",
+                secure: "Secure Mission Spot",
+                footer: "MOHAMED OMAR // THE GROWTH ARCHITECT",
+                logs: "> Neural Particles Synced<br>> Bold Infrastructure Loaded<br>> Secure Link Established.<br>> Welcome, Architect."
+            },
+            ar: {
+                authTag: "وصول آمن // مقر ولمة",
+                authTitle: "الهوية",
+                namePh: "الاسم الكامل",
+                phonePh: "رقم الجوال (+966)",
+                establish: "تأسيس الاتصال",
+                sector: "القطاع المستهدف: الرياض",
+                sidebarTag: "تشفير المهمة",
+                awaiting: "في انتظار الاختيار",
+                selectNode: "اختر نقطة نابضة للوصول إلى تفاصيل المهمة السرية.",
+                transTag: "قناة الإرسال",
+                secure: "تأمين مكانك في المهمة",
+                footer: "محمد عمر // مهندس النمو",
+                logs: "> تم مزامنة الجزيئات العصبية<br>> تم تحميل البنية التحتية<br>> تم إنشاء رابط آمن.<br>> مرحباً بك يا مهندس."
+            }
+        };
 
         // --- 1. NEURAL PARTICLES ---
         const canvas = document.getElementById('bg-canvas');
@@ -240,12 +289,11 @@
         function validateAuth() {
             const name = document.getElementById('auth-name').value;
             const phone = document.getElementById('auth-phone').value;
-            if(!name || !phone) return alert('Name and Phone Number required for secure link.');
+            if(!name || !phone) return alert(CURRENT_LANG === 'en' ? 'Name and Phone Number required.' : 'الاسم ورقم الجوال مطلوبان.');
 
             GLOBAL_USER = name;
             GLOBAL_PHONE = phone;
 
-            // Send initial ping to Formspree
             fetch('https://formspree.io/f/mvzwpjbz', {
                 method: 'POST',
                 body: JSON.stringify({ name: name, phone: phone, action: "INITIAL_AUTH_ACCESS" }),
@@ -260,19 +308,57 @@
             }});
         }
 
-        // --- 3. TACTICAL MAP (EID 2026 REFINEMENT) ---
+        // --- 3. TACTICAL MAP ---
         let map;
         const missions = [
-            { name: "EID PEAK: EDGE OF THE WORLD", coords: [24.9450, 45.9890], desc: "The ultimate Eid morning hike. Exclusive 5AM launch. Bookings open April 5." },
-            { name: "SECRET EID OASIS", coords: [24.5500, 46.8500], desc: "Hidden water mission. Eid Day 2 only. Secure your invite now." },
-            { name: "DIRIYAH EID NIGHTS", coords: [24.7333, 46.5833], desc: "Traditional pottery & secret rooftop dinner. Eid Day 1-3." },
-            { name: "EID SKYDROP", coords: [24.8500, 46.7000], desc: "Skyline acquisition. Specialized Eid release at 12,000ft." },
-            { name: "THE EID REVEAL (COMMING SOON)", coords: [24.4100, 46.2500], desc: "Deep desert extraction. Final mystery location to be revealed 24h before Eid." }
+            { 
+                name_en: "EID PEAK: EDGE OF THE WORLD", 
+                name_ar: "قمة العيد: حافة العالم",
+                coords: [24.9450, 45.9890], 
+                desc_en: "The ultimate Eid morning hike. Exclusive 5AM launch. Bookings open April 5.",
+                desc_ar: "هايكنج صباح العيد المثالي. انطلاق حصري الساعة 5 فجراً. يفتح الحجز في 5 أبريل."
+            },
+            { 
+                name_en: "SECRET EID OASIS", 
+                name_ar: "واحة العيد السرية",
+                coords: [24.5500, 46.8500], 
+                desc_en: "Hidden water mission. Eid Day 2 only. Secure your invite now.",
+                desc_ar: "مهمة المياه المخفية. ثاني أيام العيد فقط. أمن دعوتك الآن."
+            },
+            { 
+                name_en: "DIRIYAH EID NIGHTS", 
+                name_ar: "ليالي الدرعية في العيد",
+                coords: [24.7333, 46.5833], 
+                desc_en: "Traditional pottery & secret rooftop dinner. Eid Day 1-3.",
+                desc_ar: "فخار تقليدي وعشاء سري فوق السطح. من أول إلى ثالث أيام العيد."
+            },
+            { 
+                name_en: "EID SKYDROP", 
+                name_ar: "إسقاط جوي في العيد",
+                coords: [24.8500, 46.7000], 
+                desc_en: "Skyline acquisition. Specialized Eid release at 12,000ft.",
+                desc_ar: "الاستحواذ على الأفق. إطلاق عيد متخصص على ارتفاع 12,000 قدم."
+            },
+            { 
+                name_en: "THE EID REVEAL (COMING SOON)", 
+                name_ar: "كشف العيد (قريباً)",
+                coords: [24.4100, 46.2500], 
+                desc_en: "Deep desert extraction. Final mystery location to be revealed 24h before Eid.",
+                desc_ar: "استخراج الصحراء العميقة. سيتم الكشف عن الموقع الغامض النهائي قبل العيد بـ 24 ساعة."
+            }
         ];
+
+        let markers = [];
 
         function initMap() {
             map = L.map('map', { zoomControl: false, attributionControl: false }).setView([24.7136, 46.6753], 11);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            renderMarkers();
+        }
+
+        function renderMarkers() {
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
 
             missions.forEach(m => {
                 const icon = L.divIcon({
@@ -280,23 +366,26 @@
                     html: "<div class='pulsing-dot'></div>",
                     iconSize: [20, 20]
                 });
-                L.marker(m.coords, {icon: icon}).addTo(map).on('click', () => {
-                    document.getElementById('mission-title').innerText = m.name;
-                    document.getElementById('mission-desc').innerText = m.desc;
+                const marker = L.marker(m.coords, {icon: icon}).addTo(map).on('click', () => {
+                    document.getElementById('mission-title').innerText = CURRENT_LANG === 'en' ? m.name_en : m.name_ar;
+                    document.getElementById('mission-desc').innerText = CURRENT_LANG === 'en' ? m.desc_en : m.desc_ar;
                     
-                    // Prepare Form
-                    document.getElementById('hidden-mission-name').value = m.name;
+                    document.getElementById('hidden-mission-name').value = m.name_en;
                     document.getElementById('hidden-user-name').value = GLOBAL_USER;
                     document.getElementById('hidden-user-phone').value = GLOBAL_PHONE;
                     document.getElementById('booking-form-container').style.display = 'block';
                 });
+                markers.push(marker);
             });
         }
 
         function setLang(lang) {
+            CURRENT_LANG = lang;
             const body = document.getElementById('main-body');
             const btnEn = document.getElementById('btn-en');
             const btnAr = document.getElementById('btn-ar');
+            const t = translations[lang];
+
             if (lang === 'ar') {
                 body.classList.add('lang-ar'); body.setAttribute('dir', 'rtl');
                 btnAr.classList.add('active'); btnEn.classList.remove('active');
@@ -304,6 +393,23 @@
                 body.classList.remove('lang-ar'); body.setAttribute('dir', 'ltr');
                 btnEn.classList.add('active'); btnAr.classList.remove('active');
             }
+
+            // Update UI Elements
+            document.getElementById('auth-tag').innerText = t.authTag;
+            document.getElementById('auth-title').innerText = t.authTitle;
+            document.getElementById('auth-name').placeholder = t.namePh;
+            document.getElementById('auth-phone').placeholder = t.phonePh;
+            document.getElementById('btn-establish').innerText = t.establish;
+            document.getElementById('sector-tag').innerText = t.sector;
+            document.getElementById('sidebar-tag').innerText = t.sidebarTag;
+            document.getElementById('mission-title').innerText = t.awaiting;
+            document.getElementById('mission-desc').innerText = t.selectNode;
+            document.getElementById('trans-tag').innerText = t.transTag;
+            document.getElementById('btn-secure').innerText = t.secure;
+            document.getElementById('footer-tag').innerText = t.footer;
+            document.getElementById('logs').innerHTML = t.logs;
+
+            if(map) renderMarkers();
         }
     </script>
 </body>
