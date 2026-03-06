@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WLMMA // ONYX COMMAND // RIYADH STRIKE</title>
+    
+    <!-- External Libs -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Cairo:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --bg: #000000;
+            --primary: #FFD700; /* Gold */
+            --accent: #00ff9d;  /* Neon Green */
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(0, 255, 157, 0.2);
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: var(--bg); color: var(--text); 
+            font-family: 'Inter', sans-serif; overflow: hidden;
+        }
+
+        [lang="ar"] { font-family: 'Cairo', sans-serif; }
+
+        /* --- NEURAL BACKGROUND --- */
+        #bg-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 5; opacity: 0.3; pointer-events: none;
+        }
+
+        /* --- TACTICAL GRID --- */
+        #grid-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; pointer-events: none;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.2;
+        }
+
+        /* --- AUTH OVERLAY --- */
+        .auth-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2000; background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: all 1s ease;
+        }
+
+        .auth-card {
+            background: var(--glass); border: 1px solid var(--border);
+            backdrop-filter: blur(40px); padding: 60px; border-radius: 40px;
+            text-align: center; width: 100%; max-width: 400px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+        }
+
+        .system-tag {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+            letter-spacing: 5px; color: var(--primary); margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%; background: rgba(0,0,0,0.8); border: 1px solid var(--border);
+            padding: 18px; border-radius: 12px; color: #fff; font-size: 0.9rem;
+            margin-bottom: 15px; outline: none; box-sizing: border-box;
+            text-align: center; font-family: 'JetBrains Mono', monospace;
+        }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 20px rgba(0, 255, 157, 0.2); }
+
+        .btn-unlock {
+            width: 100%; background: var(--primary); color: #000;
+            padding: 18px; border-radius: 12px; border: none;
+            font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-unlock:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+
+        .btn-booking {
+            background: var(--accent); color: #000; border: none; width: 100%;
+            padding: 15px; border-radius: 5px; font-weight: 900; cursor: pointer;
+            margin-top: 20px; text-transform: uppercase; font-size: 0.75rem;
+        }
+        .btn-booking:hover { filter: brightness(1.2); box-shadow: 0 0 20px var(--accent); }
+
+        /* --- MAP INTERFACE --- */
+        #map-ui { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        #map {
+            width: 100%; height: 100%; background: #000;
+            filter: invert(100%) hue-rotate(180deg) brightness(1.1) contrast(1.4) saturate(0);
+            z-index: 1;
+        }
+
+        .tactical-header {
+            position: absolute; top: 30px; left: 30px; z-index: 500;
+            background: rgba(0,0,0,0.9); border: 2px solid var(--accent);
+            padding: 20px 30px; border-radius: 5px; backdrop-filter: blur(10px);
+        }
+
+        .sidebar {
+            position: absolute; right: 30px; top: 100px; bottom: 30px;
+            width: 320px; z-index: 500; background: rgba(0,0,0,0.9);
+            border: 2px solid var(--accent); border-radius: 5px;
+            padding: 30px; backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; transform: translateX(400px);
+        }
+
+        /* --- GLOWING DOT MARKERS --- */
+        .pulsing-dot {
+            width: 20px; height: 20px; background: var(--accent);
+            border-radius: 50%; border: 3px solid #000;
+            box-shadow: 0 0 20px var(--accent);
+            animation: orb-pulse 2s infinite;
+        }
+        @keyframes orb-pulse {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(0, 255, 157, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 157, 0); }
+        }
+
+        .footer-branding {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 1500; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; color: var(--primary); letter-spacing: 4px; font-weight: 900;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .en-content { display: block; }
+        .ar-content { display: none; }
+        body.lang-ar .en-content { display: none; }
+        body.lang-ar .ar-content { display: block; }
+    </style>
+</head>
+<body id="main-body">
+
+    <canvas id="bg-canvas"></canvas>
+    <div id="grid-overlay"></div>
+
+    <div class="lang-switcher">
+        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="btn-ar" onclick="setLang('ar')">AR</button>
+    </div>
+
+    <!-- AUTHENTICATION -->
+    <div class="auth-overlay" id="auth">
+        <div class="auth-card">
+            <div class="system-tag">Secure Access // WLMMA HQ</div>
+            <h1 style="margin-bottom: 30px;">IDENTITY</h1>
+            <input type="text" id="auth-name" placeholder="FULL NAME">
+            <input type="text" id="auth-phone" placeholder="PHONE NUMBER (+966)">
+            <button class="btn-unlock" onclick="validateAuth()">Establish Link</button>
+        </div>
+    </div>
+
+    <!-- MAIN UI -->
+    <div id="map-ui">
+        <div class="tactical-header">
+            <div class="system-tag" style="color: var(--accent);">Target Sector: Riyadh</div>
+            <h2 style="margin:5px 0 0 0; font-weight:900;">
+                <span class="en-content">Mission Map</span>
+                <span class="ar-content">خريطة المهام</span>
+            </h2>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="sidebar" id="sidebar">
+            <div class="system-tag">Mission Decryption</div>
+            <h3 id="mission-title" style="margin:10px 0; color: #fff;">AWAITING SELECTION</h3>
+            <p id="mission-desc" style="font-size:0.85rem; color:#888;">Select a pulsing node to access secret mission parameters.</p>
+            
+            <div id="booking-form-container" style="display:none; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <div class="system-tag" style="color:var(--primary); font-size: 0.5rem;">Transmission Channel</div>
+                <form id="mission-form" action="https://formspree.io/f/mvzwpjbz" method="POST">
+                    <input type="hidden" name="Mission" id="hidden-mission-name">
+                    <input type="hidden" name="User_Identity" id="hidden-user-name">
+                    <input type="hidden" name="User_Contact" id="hidden-user-phone">
+                    <button type="submit" class="btn-booking">Secure Mission Spot</button>
+                </form>
+            </div>
+
+            <div id="logs" style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent); margin-top: auto;">
+                > Neural Particles Synced<br>
+                > Bold Infrastructure Loaded<br>
+                > Secure Link Established.<br>
+                > Welcome, Architect.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-branding">
+        MOHAMED OMAR // THE GROWTH ARCHITECT
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let GLOBAL_USER = "";
+        let GLOBAL_PHONE = "";
+
+        // --- 1. NEURAL PARTICLES ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0; if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0; if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = '#FFD700'; ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+        for (let i = 0; i < 80; i++) particles.push(new Particle());
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 2. AUTHENTICATION & INITIAL CAPTURE ---
+        function validateAuth() {
+            const name = document.getElementById('auth-name').value;
+            const phone = document.getElementById('auth-phone').value;
+            if(!name || !phone) return alert('Name and Phone Number required for secure link.');
+
+            GLOBAL_USER = name;
+            GLOBAL_PHONE = phone;
+
+            // Send initial ping to Formspree
+            fetch('https://formspree.io/f/mvzwpjbz', {
+                method: 'POST',
+                body: JSON.stringify({ name: name, phone: phone, action: "INITIAL_AUTH_ACCESS" }),
+                headers: { 'Accept': 'application/json' }
+            });
+
+            gsap.to('#auth', { opacity: 0, duration: 1, onComplete: () => {
+                document.getElementById('auth').style.display = 'none';
+                document.getElementById('map-ui').style.display = 'block';
+                initMap();
+                gsap.to('#sidebar', { x: 0, duration: 1.5, ease: "expo.out" });
+            }});
+        }
+
+        // --- 3. TACTICAL MAP (EID 2026 REFINEMENT) ---
+        let map;
+        const missions = [
+            { name: "EID PEAK: EDGE OF THE WORLD", coords: [24.9450, 45.9890], desc: "The ultimate Eid morning hike. Exclusive 5AM launch. Bookings open April 5." },
+            { name: "SECRET EID OASIS", coords: [24.5500, 46.8500], desc: "Hidden water mission. Eid Day 2 only. Secure your invite now." },
+            { name: "DIRIYAH EID NIGHTS", coords: [24.7333, 46.5833], desc: "Traditional pottery & secret rooftop dinner. Eid Day 1-3." },
+            { name: "EID SKYDROP", coords: [24.8500, 46.7000], desc: "Skyline acquisition. Specialized Eid release at 12,000ft." },
+            { name: "THE EID REVEAL (COMMING SOON)", coords: [24.4100, 46.2500], desc: "Deep desert extraction. Final mystery location to be revealed 24h before Eid." }
+        ];
+
+        function initMap() {
+            map = L.map('map', { zoomControl: false, attributionControl: false }).setView([24.7136, 46.6753], 11);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            missions.forEach(m => {
+                const icon = L.divIcon({
+                    className: 'custom-orb',
+                    html: "<div class='pulsing-dot'></div>",
+                    iconSize: [20, 20]
+                });
+                L.marker(m.coords, {icon: icon}).addTo(map).on('click', () => {
+                    document.getElementById('mission-title').innerText = m.name;
+                    document.getElementById('mission-desc').innerText = m.desc;
+                    
+                    // Prepare Form
+                    document.getElementById('hidden-mission-name').value = m.name;
+                    document.getElementById('hidden-user-name').value = GLOBAL_USER;
+                    document.getElementById('hidden-user-phone').value = GLOBAL_PHONE;
+                    document.getElementById('booking-form-container').style.display = 'block';
+                });
+            });
+        }
+
+        function setLang(lang) {
+            const body = document.getElementById('main-body');
+            const btnEn = document.getElementById('btn-en');
+            const btnAr = document.getElementById('btn-ar');
+            if (lang === 'ar') {
+                body.classList.add('lang-ar'); body.setAttribute('dir', 'rtl');
+                btnAr.classList.add('active'); btnEn.classList.remove('active');
+            } else {
+                body.classList.remove('lang-ar'); body.setAttribute('dir', 'ltr');
+                btnEn.classList.add('active'); btnAr.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
