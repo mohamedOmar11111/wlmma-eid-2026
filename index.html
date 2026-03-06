@@ -53,7 +53,7 @@
             display: flex; gap: 8px;
         }
         .lang-btn {
-            background: rgba(0,0,0,0.9); border: 1px solid var(--border);
+            background: rgba(0,0,0,0.8); border: 1px solid var(--border);
             color: #555; padding: 6px 12px; border-radius: 5px;
             font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
             cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px);
@@ -118,10 +118,11 @@
 
         .sidebar {
             position: absolute; right: 20px; top: 85px; bottom: 20px;
-            width: 300px; z-index: 500; background: rgba(0,0,0,0.95);
+            width: 260px; z-index: 500; background: rgba(0,0,0,0.95);
             border: 1.5px solid var(--accent); border-radius: 5px;
             padding: 25px; backdrop-filter: blur(15px);
-            display: flex; flex-direction: column; transform: translateX(400px);
+            display: flex; flex-direction: column; 
+            transform: translateX(400px);
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -129,9 +130,9 @@
         @media (max-width: 768px) {
             .sidebar {
                 right: 0; left: 0; top: auto; bottom: 0;
-                width: 100%; height: 45vh; border-radius: 20px 20px 0 0;
+                width: 100%; height: 35vh; border-radius: 20px 20px 0 0;
                 transform: translateY(100%); border-left: none; border-right: none;
-                padding: 30px 20px; box-sizing: border-box;
+                padding: 25px 20px; box-sizing: border-box;
             }
             body.lang-ar .sidebar { left: 0; right: 0; transform: translateY(100%); }
             .sidebar.active { transform: translateY(0) !important; }
@@ -212,10 +213,10 @@
         <div class="sidebar" id="sidebar">
             <div class="close-sidebar" onclick="closeSidebar()">×</div>
             <div class="system-tag" id="sidebar-tag">Mission Decryption</div>
-            <h3 id="mission-title" style="margin:10px 0; color: #fff; font-size: 1.2rem;">AWAITING SELECTION</h3>
-            <p id="mission-desc" style="font-size:0.8rem; color:#888; line-height: 1.4;">Select a pulsing node to access secret mission parameters.</p>
+            <h3 id="mission-title" style="margin:10px 0; color: #fff; font-size: 1.1rem;">AWAITING SELECTION</h3>
+            <p id="mission-desc" style="font-size:0.75rem; color:#888; line-height: 1.4;">Select a pulsing node to access secret mission parameters.</p>
             
-            <div id="booking-form-container" style="display:none; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
+            <div id="booking-form-container" style="display:none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
                 <div class="system-tag" style="color:var(--primary); font-size: 0.5rem; margin-bottom: 10px;" id="trans-tag">Transmission Channel</div>
                 <form id="mission-form" action="https://formspree.io/f/mvzwpjbz" method="POST">
                     <input type="hidden" name="Mission" id="hidden-mission-name">
@@ -225,7 +226,7 @@
                 </form>
             </div>
 
-            <div id="logs" style="font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--accent); margin-top: auto; padding-top: 20px; opacity: 0.5;">
+            <div id="logs" style="font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--accent); margin-top: auto; padding-top: 15px; opacity: 0.4;">
                 > Neural Particles Synced<br>
                 > Bold Infrastructure Loaded<br>
                 > Secure Link Established.
@@ -327,9 +328,6 @@
                 document.getElementById('auth').style.display = 'none';
                 document.getElementById('map-ui').style.display = 'block';
                 initMap();
-                if(window.innerWidth > 768) {
-                    gsap.to('#sidebar', { x: 0, duration: 1.2, ease: "expo.out" });
-                }
             }});
         }
 
@@ -362,7 +360,11 @@
                     
                     const sidebar = document.getElementById('sidebar');
                     sidebar.classList.add('active');
-                    if(window.innerWidth <= 768) sidebar.style.transform = 'translateY(0)';
+                    if(window.innerWidth > 768) {
+                        gsap.to(sidebar, { x: 0, duration: 0.8, ease: "power2.out" });
+                    } else {
+                        gsap.to(sidebar, { y: 0, duration: 0.6, ease: "power2.out" });
+                    }
                 });
             });
         }
@@ -370,7 +372,11 @@
         function closeSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.remove('active');
-            sidebar.style.transform = window.innerWidth <= 768 ? 'translateY(100%)' : 'translateX(400px)';
+            if(window.innerWidth > 768) {
+                gsap.to(sidebar, { x: 400, duration: 0.8, ease: "power2.in" });
+            } else {
+                gsap.to(sidebar, { y: '100%', duration: 0.6, ease: "power2.in" });
+            }
         }
 
         function setLang(lang) {
