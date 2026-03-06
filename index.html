@@ -49,13 +49,13 @@
 
         /* --- LANG SWITCHER --- */
         .lang-switcher {
-            position: fixed; top: calc(20px + env(safe-area-inset-top)); right: 20px; z-index: 2500;
-            display: flex; gap: 8px;
+            position: fixed; top: calc(15px + env(safe-area-inset-top)); right: 15px; z-index: 2500;
+            display: flex; gap: 6px;
         }
         .lang-btn {
             background: rgba(0,0,0,0.85); border: 1px solid var(--border);
-            color: #555; padding: 6px 12px; border-radius: 5px;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+            color: #555; padding: 5px 10px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
             cursor: pointer; transition: 0.3s; backdrop-filter: blur(15px);
         }
         .lang-btn.active { color: var(--accent); border-color: var(--accent); }
@@ -70,35 +70,36 @@
 
         .auth-card {
             background: var(--glass); border: 1px solid var(--border);
-            backdrop-filter: blur(40px); padding: 40px 30px; border-radius: 30px;
-            text-align: center; width: 90%; max-width: 340px;
+            backdrop-filter: blur(40px); padding: 35px 25px; border-radius: 24px;
+            text-align: center; width: 90%; max-width: 300px;
             box-shadow: 0 50px 100px rgba(0,0,0,0.9);
         }
 
         .system-tag {
-            font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
-            letter-spacing: 3px; color: var(--primary); margin-bottom: 15px;
-            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
+            letter-spacing: 2px; color: var(--primary); margin-bottom: 12px;
+            text-transform: uppercase; opacity: 0.8;
         }
 
         input {
             width: 100%; background: rgba(0,0,0,0.8); border: 1px solid var(--border);
-            padding: 15px; border-radius: 10px; color: #fff; font-size: 0.9rem;
-            margin-bottom: 12px; outline: none; box-sizing: border-box;
+            padding: 12px; border-radius: 8px; color: #fff; font-size: 0.85rem;
+            margin-bottom: 10px; outline: none; box-sizing: border-box;
             text-align: center; font-family: 'JetBrains Mono', monospace;
         }
+        input:focus { border-color: var(--accent); }
 
         .btn-unlock {
             width: 100%; background: var(--primary); color: #000;
-            padding: 15px; border-radius: 10px; border: none;
+            padding: 12px; border-radius: 8px; border: none;
             font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
-            cursor: pointer; transition: 0.3s;
+            cursor: pointer; transition: 0.3s; font-size: 0.8rem;
         }
 
         .btn-booking {
             background: var(--accent); color: #000; border: none; width: 100%;
-            padding: 14px; border-radius: 8px; font-weight: 900; cursor: pointer;
-            margin-top: 15px; text-transform: uppercase; font-size: 0.75rem;
+            padding: 12px; border-radius: 6px; font-weight: 900; cursor: pointer;
+            margin-top: 15px; text-transform: uppercase; font-size: 0.7rem;
         }
 
         /* --- MAP INTERFACE --- */
@@ -110,16 +111,16 @@
         }
 
         .tactical-header {
-            position: absolute; top: calc(20px + env(safe-area-inset-top)); left: 20px; z-index: 500;
-            background: rgba(0,0,0,0.9); border: 1.5px solid var(--accent);
-            padding: 10px 18px; border-radius: 5px; backdrop-filter: blur(10px);
-            max-width: calc(100% - 140px);
+            position: absolute; top: calc(15px + env(safe-area-inset-top)); left: 15px; z-index: 500;
+            background: rgba(0,0,0,0.9); border: 1px solid var(--accent);
+            padding: 8px 15px; border-radius: 4px; backdrop-filter: blur(10px);
+            max-width: calc(100% - 120px);
         }
 
         .sidebar {
             position: absolute; right: 20px; top: 100px; bottom: 20px;
             width: 260px; z-index: 500; background: rgba(0,0,0,0.95);
-            border: 1.5px solid var(--accent); border-radius: 5px;
+            border: 1px solid var(--accent); border-radius: 5px;
             padding: 25px; backdrop-filter: blur(15px);
             display: flex; flex-direction: column; 
             transform: translateX(400px);
@@ -130,21 +131,24 @@
         @media (max-width: 768px) {
             .sidebar {
                 right: 0; left: 0; top: auto; bottom: 0;
-                width: 100%; height: auto; max-height: 40vh; 
+                width: 100%; height: auto; max-height: 38vh; 
                 border-radius: 20px 20px 0 0;
                 transform: translateY(100%); border-left: none; border-right: none;
-                padding: 25px 20px calc(25px + env(safe-area-inset-bottom)) 20px; 
+                padding: 25px 20px calc(20px + env(safe-area-inset-bottom)) 20px; 
                 box-sizing: border-box;
             }
             body.lang-ar .sidebar { left: 0; right: 0; transform: translateY(100%); }
             .sidebar.active { transform: translateY(0) !important; }
             
-            .tactical-header { top: calc(75px + env(safe-area-inset-top)); left: 15px; width: auto; padding: 8px 12px; }
-            body.lang-ar .tactical-header { left: auto; right: 15px; }
+            .tactical-header { top: calc(65px + env(safe-area-inset-top)); left: 12px; width: auto; padding: 6px 12px; }
+            body.lang-ar .tactical-header { left: auto; right: 12px; }
             
-            h1 { font-size: 1.6rem !important; }
-            h2 { font-size: 1rem !important; }
-            .auth-card { padding: 35px 25px; width: 85%; }
+            h1 { font-size: 1.4rem !important; margin-bottom: 20px !important; }
+            h2 { font-size: 0.9rem !important; }
+            .auth-card { padding: 30px 20px; width: 80%; max-width: 280px; }
+            .system-tag { font-size: 0.5rem; }
+            input { padding: 10px; font-size: 0.8rem; margin-bottom: 8px; }
+            .btn-unlock { padding: 10px; font-size: 0.75rem; }
         }
 
         /* --- GLOWING DOT MARKERS --- */
@@ -161,20 +165,20 @@
         }
 
         .footer-branding {
-            position: fixed; bottom: calc(15px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: calc(10px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
             z-index: 400; font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem; color: var(--primary); letter-spacing: 3px; font-weight: 900;
-            text-align: center; width: 100%; pointer-events: none;
+            font-size: 0.5rem; color: var(--primary); letter-spacing: 2px; font-weight: 900;
+            text-align: center; width: 100%; pointer-events: none; opacity: 0.6;
         }
 
         @media (max-width: 768px) { .footer-branding { display: none; } }
 
         .close-sidebar {
-            display: none; position: absolute; top: 15px; right: 20px;
-            font-size: 1.8rem; color: var(--accent); cursor: pointer;
-            padding: 10px; z-index: 600;
+            display: none; position: absolute; top: 12px; right: 18px;
+            font-size: 1.6rem; color: var(--accent); cursor: pointer;
+            padding: 5px; z-index: 600;
         }
-        @media (max-width: 768px) { .close-sidebar { display: block; } body.lang-ar .close-sidebar { right: auto; left: 20px; } }
+        @media (max-width: 768px) { .close-sidebar { display: block; } body.lang-ar .close-sidebar { right: auto; left: 18px; } }
 
     </style>
 </head>
@@ -192,7 +196,7 @@
     <div class="auth-overlay" id="auth">
         <div class="auth-card">
             <div class="system-tag" id="auth-tag">Secure Access // WLMMA HQ</div>
-            <h1 style="margin: 0 0 30px 0; font-size: 2rem; font-weight: 900;" id="auth-title">IDENTITY</h1>
+            <h1 style="margin: 0 0 25px 0; font-size: 1.8rem; font-weight: 900;" id="auth-title">IDENTITY</h1>
             <input type="text" id="auth-name" placeholder="FULL NAME">
             <input type="text" id="auth-phone" placeholder="PHONE NUMBER (+966)">
             <button class="btn-unlock" id="btn-establish" onclick="validateAuth()">Establish Link</button>
@@ -202,7 +206,7 @@
     <!-- MAIN UI -->
     <div id="map-ui">
         <div class="tactical-header">
-            <div class="system-tag" style="color: var(--accent); margin-bottom: 3px; font-size: 0.5rem;" id="sector-tag">Target Sector: Riyadh</div>
+            <div class="system-tag" style="color: var(--accent); margin-bottom: 2px; font-size: 0.45rem;" id="sector-tag">Target Sector: Riyadh</div>
             <h2 style="margin:0; font-weight:900;">
                 <span class="en-content">Mission Map</span>
                 <span class="ar-content">خريطة المهام</span>
@@ -214,11 +218,11 @@
         <div class="sidebar" id="sidebar">
             <div class="close-sidebar" onclick="closeSidebar()">×</div>
             <div class="system-tag" id="sidebar-tag">Mission Decryption</div>
-            <h3 id="mission-title" style="margin:10px 0; color: #fff; font-size: 1.1rem;">AWAITING SELECTION</h3>
-            <p id="mission-desc" style="font-size:0.75rem; color:#888; line-height: 1.4;">Select a pulsing node to access secret mission parameters.</p>
+            <h3 id="mission-title" style="margin:8px 0; color: #fff; font-size: 1rem;">AWAITING SELECTION</h3>
+            <p id="mission-desc" style="font-size:0.7rem; color:#888; line-height: 1.4;">Select a pulsing node to access secret mission parameters.</p>
             
-            <div id="booking-form-container" style="display:none; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
-                <div class="system-tag" style="color:var(--primary); font-size: 0.5rem; margin-bottom: 10px;" id="trans-tag">Transmission Channel</div>
+            <div id="booking-form-container" style="display:none; margin-top: 12px; border-top: 1px solid var(--border); padding-top: 12px;">
+                <div class="system-tag" style="color:var(--primary); font-size: 0.45rem; margin-bottom: 8px;" id="trans-tag">Transmission Channel</div>
                 <form id="mission-form" action="https://formspree.io/f/mvzwpjbz" method="POST">
                     <input type="hidden" name="Mission" id="hidden-mission-name">
                     <input type="hidden" name="User_Identity" id="hidden-user-name">
@@ -227,7 +231,7 @@
                 </form>
             </div>
 
-            <div id="logs" style="font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; color: var(--accent); margin-top: auto; padding-top: 15px; opacity: 0.4;">
+            <div id="logs" style="font-family: 'JetBrains Mono', monospace; font-size: 0.45rem; color: var(--accent); margin-top: auto; padding-top: 15px; opacity: 0.3;">
                 > Neural Particles Synced<br>
                 > Secure Link Established.
             </div>
@@ -287,9 +291,9 @@
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.2;
-                this.speedX = Math.random() * 0.3 - 0.15;
-                this.speedY = Math.random() * 0.3 - 0.15;
+                this.size = Math.random() * 1.0;
+                this.speedX = Math.random() * 0.2 - 0.1;
+                this.speedY = Math.random() * 0.2 - 0.1;
             }
             update() {
                 this.x += this.speedX; this.y += this.speedY;
@@ -301,7 +305,7 @@
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
-        for (let i = 0; i < 50; i++) particles.push(new Particle());
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
