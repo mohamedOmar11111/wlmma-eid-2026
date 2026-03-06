@@ -43,8 +43,8 @@
             background-image: 
                 linear-gradient(var(--border) 1px, transparent 1px),
                 linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.1;
+            background-size: 30px 30px;
+            opacity: 0.08;
         }
 
         /* --- LANG SWITCHER --- */
@@ -54,52 +54,53 @@
         }
         .lang-btn {
             background: rgba(0,0,0,0.85); border: 1px solid var(--border);
-            color: #555; padding: 5px 10px; border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+            color: #555; padding: 4px 8px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
             cursor: pointer; transition: 0.3s; backdrop-filter: blur(15px);
         }
         .lang-btn.active { color: var(--accent); border-color: var(--accent); }
 
-        /* --- AUTH OVERLAY --- */
+        /* --- AUTH OVERLAY (CENTERED) --- */
         .auth-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2000; background: #000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: all 1s ease; padding: 20px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 1s ease;
         }
 
         .auth-card {
             background: var(--glass); border: 1px solid var(--border);
-            backdrop-filter: blur(40px); padding: 35px 25px; border-radius: 24px;
-            text-align: center; width: 90%; max-width: 300px;
+            backdrop-filter: blur(40px); padding: 30px 20px; border-radius: 20px;
+            text-align: center; width: 85%; max-width: 260px;
             box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+            display: flex; flex-direction: column; align-items: center;
         }
 
         .system-tag {
-            font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
-            letter-spacing: 2px; color: var(--primary); margin-bottom: 12px;
-            text-transform: uppercase; opacity: 0.8;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.5rem;
+            letter-spacing: 2px; color: var(--primary); margin-bottom: 10px;
+            text-transform: uppercase; opacity: 0.7;
         }
 
         input {
             width: 100%; background: rgba(0,0,0,0.8); border: 1px solid var(--border);
-            padding: 12px; border-radius: 8px; color: #fff; font-size: 0.85rem;
-            margin-bottom: 10px; outline: none; box-sizing: border-box;
+            padding: 10px; border-radius: 6px; color: #fff; font-size: 0.8rem;
+            margin-bottom: 8px; outline: none; box-sizing: border-box;
             text-align: center; font-family: 'JetBrains Mono', monospace;
         }
         input:focus { border-color: var(--accent); }
 
         .btn-unlock {
             width: 100%; background: var(--primary); color: #000;
-            padding: 12px; border-radius: 8px; border: none;
+            padding: 10px; border-radius: 6px; border: none;
             font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
-            cursor: pointer; transition: 0.3s; font-size: 0.8rem;
+            cursor: pointer; transition: 0.3s; font-size: 0.7rem;
         }
 
         .btn-booking {
             background: var(--accent); color: #000; border: none; width: 100%;
-            padding: 12px; border-radius: 6px; font-weight: 900; cursor: pointer;
-            margin-top: 15px; text-transform: uppercase; font-size: 0.7rem;
+            padding: 10px; border-radius: 5px; font-weight: 900; cursor: pointer;
+            margin-top: 12px; text-transform: uppercase; font-size: 0.65rem;
         }
 
         /* --- MAP INTERFACE --- */
@@ -113,15 +114,15 @@
         .tactical-header {
             position: absolute; top: calc(15px + env(safe-area-inset-top)); left: 15px; z-index: 500;
             background: rgba(0,0,0,0.9); border: 1px solid var(--accent);
-            padding: 8px 15px; border-radius: 4px; backdrop-filter: blur(10px);
+            padding: 6px 12px; border-radius: 4px; backdrop-filter: blur(10px);
             max-width: calc(100% - 120px);
         }
 
         .sidebar {
             position: absolute; right: 20px; top: 100px; bottom: 20px;
-            width: 260px; z-index: 500; background: rgba(0,0,0,0.95);
+            width: 240px; z-index: 500; background: rgba(0,0,0,0.95);
             border: 1px solid var(--accent); border-radius: 5px;
-            padding: 25px; backdrop-filter: blur(15px);
+            padding: 20px; backdrop-filter: blur(15px);
             display: flex; flex-direction: column; 
             transform: translateX(400px);
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -131,54 +132,51 @@
         @media (max-width: 768px) {
             .sidebar {
                 right: 0; left: 0; top: auto; bottom: 0;
-                width: 100%; height: auto; max-height: 38vh; 
-                border-radius: 20px 20px 0 0;
+                width: 100%; height: auto; max-height: 35vh; 
+                border-radius: 15px 15px 0 0;
                 transform: translateY(100%); border-left: none; border-right: none;
-                padding: 25px 20px calc(20px + env(safe-area-inset-bottom)) 20px; 
+                padding: 20px 20px calc(20px + env(safe-area-inset-bottom)) 20px; 
                 box-sizing: border-box;
             }
             body.lang-ar .sidebar { left: 0; right: 0; transform: translateY(100%); }
             .sidebar.active { transform: translateY(0) !important; }
             
-            .tactical-header { top: calc(65px + env(safe-area-inset-top)); left: 12px; width: auto; padding: 6px 12px; }
+            .tactical-header { top: calc(60px + env(safe-area-inset-top)); left: 12px; width: auto; padding: 5px 10px; }
             body.lang-ar .tactical-header { left: auto; right: 12px; }
             
-            h1 { font-size: 1.4rem !important; margin-bottom: 20px !important; }
-            h2 { font-size: 0.9rem !important; }
-            .auth-card { padding: 30px 20px; width: 80%; max-width: 280px; }
-            .system-tag { font-size: 0.5rem; }
-            input { padding: 10px; font-size: 0.8rem; margin-bottom: 8px; }
-            .btn-unlock { padding: 10px; font-size: 0.75rem; }
+            h1 { font-size: 1.2rem !important; margin-bottom: 15px !important; }
+            h2 { font-size: 0.8rem !important; }
+            .auth-card { max-width: 240px; padding: 25px 15px; }
         }
 
         /* --- GLOWING DOT MARKERS --- */
         .pulsing-dot {
-            width: 18px; height: 18px; background: var(--accent);
-            border-radius: 50%; border: 3px solid #000;
-            box-shadow: 0 0 15px var(--accent);
+            width: 16px; height: 16px; background: var(--accent);
+            border-radius: 50%; border: 2px solid #000;
+            box-shadow: 0 0 12px var(--accent);
             animation: orb-pulse 2s infinite;
         }
         @keyframes orb-pulse {
             0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.7); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(0, 255, 157, 0); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(0, 255, 157, 0); }
             100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.7); }
         }
 
         .footer-branding {
             position: fixed; bottom: calc(10px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
             z-index: 400; font-family: 'JetBrains Mono', monospace;
-            font-size: 0.5rem; color: var(--primary); letter-spacing: 2px; font-weight: 900;
-            text-align: center; width: 100%; pointer-events: none; opacity: 0.6;
+            font-size: 0.45rem; color: var(--primary); letter-spacing: 2px; font-weight: 900;
+            text-align: center; width: 100%; pointer-events: none; opacity: 0.5;
         }
 
         @media (max-width: 768px) { .footer-branding { display: none; } }
 
         .close-sidebar {
-            display: none; position: absolute; top: 12px; right: 18px;
-            font-size: 1.6rem; color: var(--accent); cursor: pointer;
+            display: none; position: absolute; top: 10px; right: 15px;
+            font-size: 1.4rem; color: var(--accent); cursor: pointer;
             padding: 5px; z-index: 600;
         }
-        @media (max-width: 768px) { .close-sidebar { display: block; } body.lang-ar .close-sidebar { right: auto; left: 18px; } }
+        @media (max-width: 768px) { .close-sidebar { display: block; } body.lang-ar .close-sidebar { right: auto; left: 15px; } }
 
     </style>
 </head>
@@ -196,7 +194,7 @@
     <div class="auth-overlay" id="auth">
         <div class="auth-card">
             <div class="system-tag" id="auth-tag">Secure Access // WLMMA HQ</div>
-            <h1 style="margin: 0 0 25px 0; font-size: 1.8rem; font-weight: 900;" id="auth-title">IDENTITY</h1>
+            <h1 style="margin: 0 0 20px 0; font-size: 1.5rem; font-weight: 900;" id="auth-title">IDENTITY</h1>
             <input type="text" id="auth-name" placeholder="FULL NAME">
             <input type="text" id="auth-phone" placeholder="PHONE NUMBER (+966)">
             <button class="btn-unlock" id="btn-establish" onclick="validateAuth()">Establish Link</button>
@@ -206,7 +204,7 @@
     <!-- MAIN UI -->
     <div id="map-ui">
         <div class="tactical-header">
-            <div class="system-tag" style="color: var(--accent); margin-bottom: 2px; font-size: 0.45rem;" id="sector-tag">Target Sector: Riyadh</div>
+            <div class="system-tag" style="color: var(--accent); margin-bottom: 2px; font-size: 0.4rem;" id="sector-tag">Target Sector: Riyadh</div>
             <h2 style="margin:0; font-weight:900;">
                 <span class="en-content">Mission Map</span>
                 <span class="ar-content">خريطة المهام</span>
@@ -218,11 +216,11 @@
         <div class="sidebar" id="sidebar">
             <div class="close-sidebar" onclick="closeSidebar()">×</div>
             <div class="system-tag" id="sidebar-tag">Mission Decryption</div>
-            <h3 id="mission-title" style="margin:8px 0; color: #fff; font-size: 1rem;">AWAITING SELECTION</h3>
-            <p id="mission-desc" style="font-size:0.7rem; color:#888; line-height: 1.4;">Select a pulsing node to access secret mission parameters.</p>
+            <h3 id="mission-title" style="margin:5px 0; color: #fff; font-size: 0.9rem;">AWAITING SELECTION</h3>
+            <p id="mission-desc" style="font-size:0.65rem; color:#888; line-height: 1.4;">Select a pulsing node to access secret mission parameters.</p>
             
-            <div id="booking-form-container" style="display:none; margin-top: 12px; border-top: 1px solid var(--border); padding-top: 12px;">
-                <div class="system-tag" style="color:var(--primary); font-size: 0.45rem; margin-bottom: 8px;" id="trans-tag">Transmission Channel</div>
+            <div id="booking-form-container" style="display:none; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px;">
+                <div class="system-tag" style="color:var(--primary); font-size: 0.4rem; margin-bottom: 6px;" id="trans-tag">Transmission Channel</div>
                 <form id="mission-form" action="https://formspree.io/f/mvzwpjbz" method="POST">
                     <input type="hidden" name="Mission" id="hidden-mission-name">
                     <input type="hidden" name="User_Identity" id="hidden-user-name">
@@ -231,7 +229,7 @@
                 </form>
             </div>
 
-            <div id="logs" style="font-family: 'JetBrains Mono', monospace; font-size: 0.45rem; color: var(--accent); margin-top: auto; padding-top: 15px; opacity: 0.3;">
+            <div id="logs" style="font-family: 'JetBrains Mono', monospace; font-size: 0.4rem; color: var(--accent); margin-top: auto; padding-top: 10px; opacity: 0.3;">
                 > Neural Particles Synced<br>
                 > Secure Link Established.
             </div>
@@ -277,7 +275,7 @@
                 transTag: "قناة الإرسال",
                 secure: "تأمين مكانك في المهمة",
                 footer: "محمد عمر // مهندس النمو",
-                logs: "> تم مزامنة الجزيئات<br>> تم إنشاء رابط آمن."
+                logs: "> تم مزامنة الجزيئات<br>> تم تحميل البنية<br>> تم إنشاء رابط آمن."
             }
         };
 
@@ -291,9 +289,9 @@
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.0;
-                this.speedX = Math.random() * 0.2 - 0.1;
-                this.speedY = Math.random() * 0.2 - 0.1;
+                this.size = Math.random() * 0.8;
+                this.speedX = Math.random() * 0.15 - 0.07;
+                this.speedY = Math.random() * 0.15 - 0.07;
             }
             update() {
                 this.x += this.speedX; this.y += this.speedY;
@@ -305,7 +303,7 @@
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
-        for (let i = 0; i < 40; i++) particles.push(new Particle());
+        for (let i = 0; i < 30; i++) particles.push(new Particle());
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
