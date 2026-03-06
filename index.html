@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>WLMMA // ONYX COMMAND // RIYADH STRIKE</title>
     
     <!-- External Libs -->
@@ -44,19 +44,19 @@
                 linear-gradient(var(--border) 1px, transparent 1px),
                 linear-gradient(90deg, var(--border) 1px, transparent 1px);
             background-size: 40px 40px;
-            opacity: 0.15;
+            opacity: 0.1;
         }
 
         /* --- LANG SWITCHER --- */
         .lang-switcher {
-            position: fixed; top: 20px; right: 20px; z-index: 2500;
+            position: fixed; top: calc(20px + env(safe-area-inset-top)); right: 20px; z-index: 2500;
             display: flex; gap: 8px;
         }
         .lang-btn {
-            background: rgba(0,0,0,0.8); border: 1px solid var(--border);
+            background: rgba(0,0,0,0.85); border: 1px solid var(--border);
             color: #555; padding: 6px 12px; border-radius: 5px;
             font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
-            cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px);
+            cursor: pointer; transition: 0.3s; backdrop-filter: blur(15px);
         }
         .lang-btn.active { color: var(--accent); border-color: var(--accent); }
 
@@ -71,7 +71,7 @@
         .auth-card {
             background: var(--glass); border: 1px solid var(--border);
             backdrop-filter: blur(40px); padding: 40px 30px; border-radius: 30px;
-            text-align: center; width: 100%; max-width: 380px;
+            text-align: center; width: 90%; max-width: 340px;
             box-shadow: 0 50px 100px rgba(0,0,0,0.9);
         }
 
@@ -110,14 +110,14 @@
         }
 
         .tactical-header {
-            position: absolute; top: 20px; left: 20px; z-index: 500;
+            position: absolute; top: calc(20px + env(safe-area-inset-top)); left: 20px; z-index: 500;
             background: rgba(0,0,0,0.9); border: 1.5px solid var(--accent);
-            padding: 12px 20px; border-radius: 5px; backdrop-filter: blur(10px);
-            max-width: calc(100% - 120px);
+            padding: 10px 18px; border-radius: 5px; backdrop-filter: blur(10px);
+            max-width: calc(100% - 140px);
         }
 
         .sidebar {
-            position: absolute; right: 20px; top: 85px; bottom: 20px;
+            position: absolute; right: 20px; top: 100px; bottom: 20px;
             width: 260px; z-index: 500; background: rgba(0,0,0,0.95);
             border: 1.5px solid var(--accent); border-radius: 5px;
             padding: 25px; backdrop-filter: blur(15px);
@@ -130,21 +130,21 @@
         @media (max-width: 768px) {
             .sidebar {
                 right: 0; left: 0; top: auto; bottom: 0;
-                width: 100%; height: 35vh; border-radius: 20px 20px 0 0;
+                width: 100%; height: auto; max-height: 40vh; 
+                border-radius: 20px 20px 0 0;
                 transform: translateY(100%); border-left: none; border-right: none;
-                padding: 25px 20px; box-sizing: border-box;
+                padding: 25px 20px calc(25px + env(safe-area-inset-bottom)) 20px; 
+                box-sizing: border-box;
             }
             body.lang-ar .sidebar { left: 0; right: 0; transform: translateY(100%); }
             .sidebar.active { transform: translateY(0) !important; }
             
-            .tactical-header { top: 75px; left: 15px; width: auto; padding: 10px 15px; }
+            .tactical-header { top: calc(75px + env(safe-area-inset-top)); left: 15px; width: auto; padding: 8px 12px; }
             body.lang-ar .tactical-header { left: auto; right: 15px; }
             
-            .lang-switcher { top: 15px; right: 15px; }
-            
-            h1 { font-size: 1.5rem !important; }
-            h2 { font-size: 1.1rem !important; }
-            .auth-card { padding: 30px 20px; }
+            h1 { font-size: 1.6rem !important; }
+            h2 { font-size: 1rem !important; }
+            .auth-card { padding: 35px 25px; width: 85%; }
         }
 
         /* --- GLOWING DOT MARKERS --- */
@@ -161,7 +161,7 @@
         }
 
         .footer-branding {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: calc(15px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
             z-index: 400; font-family: 'JetBrains Mono', monospace;
             font-size: 0.55rem; color: var(--primary); letter-spacing: 3px; font-weight: 900;
             text-align: center; width: 100%; pointer-events: none;
@@ -170,8 +170,9 @@
         @media (max-width: 768px) { .footer-branding { display: none; } }
 
         .close-sidebar {
-            display: none; position: absolute; top: 10px; right: 20px;
-            font-size: 1.5rem; color: var(--accent); cursor: pointer;
+            display: none; position: absolute; top: 15px; right: 20px;
+            font-size: 1.8rem; color: var(--accent); cursor: pointer;
+            padding: 10px; z-index: 600;
         }
         @media (max-width: 768px) { .close-sidebar { display: block; } body.lang-ar .close-sidebar { right: auto; left: 20px; } }
 
@@ -201,7 +202,7 @@
     <!-- MAIN UI -->
     <div id="map-ui">
         <div class="tactical-header">
-            <div class="system-tag" style="color: var(--accent); margin-bottom: 5px;" id="sector-tag">Target Sector: Riyadh</div>
+            <div class="system-tag" style="color: var(--accent); margin-bottom: 3px; font-size: 0.5rem;" id="sector-tag">Target Sector: Riyadh</div>
             <h2 style="margin:0; font-weight:900;">
                 <span class="en-content">Mission Map</span>
                 <span class="ar-content">خريطة المهام</span>
@@ -226,9 +227,8 @@
                 </form>
             </div>
 
-            <div id="logs" style="font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--accent); margin-top: auto; padding-top: 15px; opacity: 0.4;">
+            <div id="logs" style="font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; color: var(--accent); margin-top: auto; padding-top: 15px; opacity: 0.4;">
                 > Neural Particles Synced<br>
-                > Bold Infrastructure Loaded<br>
                 > Secure Link Established.
             </div>
         </div>
@@ -258,7 +258,7 @@
                 transTag: "Transmission Channel",
                 secure: "Secure Mission Spot",
                 footer: "MOHAMED OMAR // THE GROWTH ARCHITECT",
-                logs: "> Neural Particles Synced<br>> Bold Infrastructure Loaded<br>> Secure Link Established."
+                logs: "> Neural Particles Synced<br>> Secure Link Established."
             },
             ar: {
                 authTag: "وصول آمن // مقر ولمة",
@@ -273,7 +273,7 @@
                 transTag: "قناة الإرسال",
                 secure: "تأمين مكانك في المهمة",
                 footer: "محمد عمر // مهندس النمو",
-                logs: "> تم مزامنة الجزيئات<br>> تم تحميل البنية<br>> تم إنشاء رابط آمن."
+                logs: "> تم مزامنة الجزيئات<br>> تم إنشاء رابط آمن."
             }
         };
 
@@ -301,7 +301,7 @@
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
-        for (let i = 0; i < 60; i++) particles.push(new Particle());
+        for (let i = 0; i < 50; i++) particles.push(new Particle());
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
@@ -342,7 +342,7 @@
         ];
 
         function initMap() {
-            map = L.map('map', { zoomControl: false, attributionControl: false, tap: false }).setView([24.7136, 46.6753], 10);
+            map = L.map('map', { zoomControl: false, attributionControl: false, tap: true }).setView([24.7136, 46.6753], 10);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             renderMarkers();
         }
@@ -361,9 +361,9 @@
                     const sidebar = document.getElementById('sidebar');
                     sidebar.classList.add('active');
                     if(window.innerWidth > 768) {
-                        gsap.to(sidebar, { x: 0, duration: 0.8, ease: "power2.out" });
+                        gsap.to(sidebar, { x: 0, duration: 0.8, ease: "power3.out" });
                     } else {
-                        gsap.to(sidebar, { y: 0, duration: 0.6, ease: "power2.out" });
+                        gsap.to(sidebar, { y: 0, duration: 0.6, ease: "power3.out" });
                     }
                 });
             });
@@ -373,9 +373,9 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.remove('active');
             if(window.innerWidth > 768) {
-                gsap.to(sidebar, { x: 400, duration: 0.8, ease: "power2.in" });
+                gsap.to(sidebar, { x: 400, duration: 0.8, ease: "power3.in" });
             } else {
-                gsap.to(sidebar, { y: '100%', duration: 0.6, ease: "power2.in" });
+                gsap.to(sidebar, { y: '100%', duration: 0.6, ease: "power3.in" });
             }
         }
 
